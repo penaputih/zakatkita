@@ -5,6 +5,7 @@ export type SerializableCampaign = Omit<Campaign, "targetAmount" | "currentAmoun
     currentAmount: number;
     createdAt: string | Date; // Date is serializable if not weird
     endDate: string | Date | null;
+    category: string;
 };
 
 export type SerializableEvent = Omit<Event, "date" | "createdAt" | "updatedAt"> & {

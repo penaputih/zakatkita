@@ -15,7 +15,8 @@ export default async function CampaignsPage() {
         ...c,
         targetAmount: Number(c.targetAmount),
         currentAmount: Number(c.currentAmount),
-        categoryName: c.category.name, // Helper for display
+        category: c.category.name,
+        categoryName: c.category.name,
         categoryId: c.categoryId
     }));
 
