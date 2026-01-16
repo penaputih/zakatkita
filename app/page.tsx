@@ -1,0 +1,105 @@
+import { Header } from "@/components/Header";
+import { HeroCarousel } from "@/components/HeroCarousel";
+import { QuickActionGrid } from "@/components/QuickActionGrid";
+import { DailyZakatWidget } from "@/components/DailyZakatWidget";
+import { FeaturedCampaigns } from "@/components/FeaturedCampaigns";
+import { FloatingBottomNav } from "@/components/FloatingBottomNav";
+import { prisma } from "@/lib/prisma";
+import { HadithWidget } from "@/components/HadithWidget";
+import { PrayerWidget } from "@/components/PrayerWidget";
+import { DailyWisdom } from "@/components/DailyWisdom";
+import { getPrayerTimes } from "@/lib/api";
+import { RunningText } from "@/components/RunningText";
+
+export const dynamic = "force-dynamic";
+
+export default async function Home() {
+  const prayerData = await getPrayerTimes("Bandung");
+
+  const campaignsData = await prisma.campaign.findMany({
+    orderBy: { createdAt: "desc" },
+    take: 5,
+    include: { category: true }
+  });
+
+  const campaigns = campaignsData.map((c: any) => ({
+    ...c,
+    targetAmount: Number(c.targetAmount),
+    currentAmount: Number(c.currentAmount),
+    category: c.category.name
+  }));
+
+  const activeBanners = await prisma.banner.findMany({
+    where: { isActive: true },
+    orderBy: { createdAt: "desc" }
+  });
+
+  const hadithWidgetActive = await prisma.settings.findUnique({ where: { key: "hadithWidgetActive" } });
+  const prayerWidgetActive = await prisma.settings.findUnique({ where: { key: "prayerWidgetActive" } });
+  const dailyWisdomActive = await prisma.settings.findUnique({ where: { key: "dailyWisdomActive" } });
+  const zakatWidgetActive = await prisma.settings.findUnique({ where: { key: "zakatWidgetActive" } });
+
+  const hadiths = await prisma.hadith.findMany({
+    orderBy: { createdAt: "desc" }
+  });
+
+  const isHadithActive = hadithWidgetActive?.value === "true";
+  const isPrayerActive = prayerWidgetActive?.value === "true";
+  const isWisdomActive = dailyWisdomActive?.value === "true";
+  const isZakatActive = zakatWidgetActive?.value === "true";
+
+  return (
+    <main className="min-h-screen bg-neutral-50 dark:bg-slate-950 pb-28">
+      {/* Sticky Header Group */}
+      <div className="sticky top-0 z-40 w-full bg-white/95 dark:bg-slate-950/95 backdrop-blur-sm">
+        <Header />
+        <RunningText />
+      </div>
+
+      {/* 2. Prayer Widget (Moved to Top) */}
+      {isPrayerActive && (
+        <div className="px-4 mt-6 mb-8">
+          {prayerData && (
+            <PrayerWidget
+              timings={prayerData.timings}
+              hijri={prayerData.date}
+              city="Bandung"
+            />
+          )}
+        </div>
+      )}
+
+      {/* 3. Quick Action Grid */}
+      <QuickActionGrid />
+
+      {/* Update Section (Hero Carousel moved here) */}
+      <section className="mb-6">
+        <h2 className="px-4 text-lg font-bold text-slate-800 dark:text-slate-100 mb-3">
+          Update
+        </h2>
+        <HeroCarousel slides={activeBanners} />
+      </section>
+
+      {/* Daily Zakat Widget */}
+      {isZakatActive && (
+        <DailyZakatWidget />
+      )}
+
+      {/* Daily Wisdom (Doa) */}
+      {isWisdomActive && (
+        <div className="px-4 mb-6">
+          <DailyWisdom />
+        </div>
+      )}
+
+      {/* Hadith Widget (Database-driven) */}
+      <HadithWidget hadiths={hadiths} isActive={isHadithActive} />
+
+      {/* 4. Featured Campaigns */}
+      <FeaturedCampaigns campaigns={campaigns} />
+
+      {/* Navigation */}
+      <FloatingBottomNav />
+    </main>
+  );
+}
