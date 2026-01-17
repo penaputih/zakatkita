@@ -59,7 +59,7 @@ export default function SedekahProgram({ program, qrisImage, bankAccount, totalD
                     <img
                         src={program.pageImage || "/placeholder-sedekah.jpg"}
                         alt={program.pageTitle}
-                        className="w-full h-48 object-cover"
+                        className="w-full aspect-video object-cover"
                     />
                 </div>
             </div>

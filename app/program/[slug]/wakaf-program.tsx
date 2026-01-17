@@ -57,12 +57,13 @@ export default function WakafProgram({ program, qrisImage, bankAccount, totalDon
 
             <article>
                 {/* Visual Header / Hero */}
-                <div className="w-full relative min-h-[500px] flex flex-col justify-end">
+                <div className="w-full relative aspect-video">
                     {/* Background Image */}
                     {program.pageImage ? (
-                        <div
-                            className="absolute inset-0 bg-cover bg-center"
-                            style={{ backgroundImage: `url(${program.pageImage})` }}
+                        <img
+                            src={program.pageImage}
+                            alt={program.pageTitle}
+                            className="absolute inset-0 w-full h-full object-cover"
                         />
                     ) : (
                         <div className="absolute inset-0 bg-slate-200 flex items-center justify-center text-muted-foreground">

@@ -43,11 +43,18 @@ export default async function BeritaDetailPage({ params }: { params: { id: strin
 
             <article>
                 {/* Visual Header */}
-                <div
-                    className={`w-full h-64 flex items-center justify-center text-muted-foreground/30 text-4xl font-bold bg-cover bg-center ${bgClass}`}
-                    style={{ backgroundImage: bgImage }}
-                >
-                    {!bgImage && !bgClass && <div className="w-full h-full bg-slate-200"></div>}
+                <div className="w-full relative aspect-video bg-muted">
+                    {bgImage ? (
+                        <img
+                            src={news.image}
+                            alt={news.title}
+                            className="absolute inset-0 w-full h-full object-cover"
+                        />
+                    ) : (
+                        <div className="w-full h-full flex items-center justify-center bg-slate-200 text-muted-foreground">
+                            No Image
+                        </div>
+                    )}
                 </div>
 
                 <div className="px-6 py-6 space-y-4">

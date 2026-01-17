@@ -76,12 +76,13 @@ Kenapa harus berwakaf disini?
 
             <article>
                 {/* Visual Header / Hero */}
-                <div className="w-full relative min-h-[500px] flex flex-col justify-end">
+                <div className="w-full relative aspect-video">
                     {/* Background Image */}
                     {image ? (
-                        <div
-                            className="absolute inset-0 bg-cover bg-center"
-                            style={{ backgroundImage: `url(${image})` }}
+                        <img
+                            src={image}
+                            alt={title || "Wakaf Program"}
+                            className="absolute inset-0 w-full h-full object-cover"
                         />
                     ) : (
                         <div className="absolute inset-0 bg-slate-200 flex items-center justify-center text-muted-foreground">
