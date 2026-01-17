@@ -21,8 +21,8 @@ const arab = Scheherazade_New({
 });
 
 export const metadata: Metadata = {
-  title: "Zakat Kita - Daarussyifa Supper Apps",
-  description: "Aplikasi hitung dan bayar zakat harian yang mudah dan terpercaya.",
+  title: "Zakat Kita - Daarussyifa Super Apps",
+  description: "Aplikasi majelis ta'lim dan dzikir daarussyifa untuk memudahkan hitung dan bayar zakat harian, sedekah subuh, wakaf, quran, hadits, dan lain lain",
 };
 
 export const viewport: Viewport = {
