@@ -18,7 +18,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetTrigger, SheetTitle, SheetDescription } from "@/components/ui/sheet";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const navItems = [
@@ -120,6 +120,12 @@ export default function AdminLayout({
                             </Button>
                         </SheetTrigger>
                         <SheetContent side="left" className="flex flex-col">
+                            <div className="sr-only">
+                                <SheetTitle>Navigation Menu</SheetTitle>
+                                <SheetDescription>
+                                    Main navigation for ZakatKita Admin dashboard.
+                                </SheetDescription>
+                            </div>
                             <nav className="grid gap-2 text-lg font-medium">
                                 <Link
                                     href="/admin"
