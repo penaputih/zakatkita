@@ -7,7 +7,6 @@ import Link from "next/link";
 import { useState } from "react";
 import { PaymentDrawer } from "@/components/PaymentDrawer";
 import { SerializableCampaign } from "@/lib/definitions";
-import { Header } from "@/components/Header";
 import { ShareButton } from "@/components/ShareButton";
 
 // We need a specific interface here since SerializableCampaign might store decimals as numbers/strings differently

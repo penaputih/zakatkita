@@ -33,8 +33,9 @@ export default async function AdminDashboard() {
     const recentTransactions = await prisma.transaction.findMany({
         take: 5,
         orderBy: { createdAt: "desc" },
-        where: { status: "VERIFIED" } // Show verified donations in activity? Or all? Usually verified is better for "Donasi Rp..." text. Let's show all but visual indicator? User asked for "data asli", let's show verified for "recent activity" to match the "Donasi" context, or maybe all. Let's stick to verified for now as valid "Activity". Actually showing all allows seeing pending ones. Let's show all but maybe filter for 'VERIFIED' to be safe or label them. The mock says "Hamba Allah Donasi ...", implies success. I will filter VERIFIED to be safe.
+        where: { status: "VERIFIED" }, // Show verified donations in activity? Or all? Usually verified is better for "Donasi Rp..." text. Let's show all but visual indicator? User asked for "data asli", let's show verified for "recent activity" to match the "Donasi" context, or maybe all. Let's stick to verified for now as valid "Activity". Actually showing all allows seeing pending ones. Let's show all but maybe filter for 'VERIFIED' to be safe or label them. The mock says "Hamba Allah Donasi ...", implies success. I will filter VERIFIED to be safe.
         // Actually, let's show all latest attempts, maybe useful? No, "Recent Activity" usually implies successful actions. I'll stick to VERIFIED.
+        include: { user: true }
     });
 
     const stats = [
@@ -90,10 +91,10 @@ export default async function AdminDashboard() {
                                 recentTransactions.map((tx) => (
                                     <div key={tx.id} className="flex items-center gap-4">
                                         <div className="size-9 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600 font-bold border border-emerald-200">
-                                            HA
+                                            {tx.user?.name ? tx.user.name.substring(0, 2).toUpperCase() : "HA"}
                                         </div>
                                         <div className="flex-1 space-y-1">
-                                            <p className="text-sm font-medium leading-none">Hamba Allah</p>
+                                            <p className="text-sm font-medium leading-none">{tx.user?.name || "Hamba Allah"}</p>
                                             <p className="text-xs text-muted-foreground">Donasi {formatCurrency(Number(tx.amount))}</p>
                                         </div>
                                         <div className="text-xs text-muted-foreground">

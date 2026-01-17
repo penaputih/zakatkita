@@ -5,15 +5,17 @@ import { prisma } from "@/lib/prisma";
 import { Card, CardContent } from "@/components/ui/card";
 import Link from "next/link";
 import { CalendarIcon, UserIcon } from "lucide-react";
+import { getSession } from "@/lib/auth";
 
 export default async function BeritaPage() {
+    const session = await getSession();
     const news = await prisma.news.findMany({
         orderBy: { createdAt: "desc" },
     });
 
     return (
         <main className="min-h-screen bg-neutral-50 dark:bg-slate-950 pb-28">
-            <Header />
+            <Header user={session?.user} />
 
             <div className="px-6 pt-6 space-y-6">
                 <div>

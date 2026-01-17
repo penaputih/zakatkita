@@ -21,12 +21,15 @@ export async function POST(request: NextRequest) {
 
         // Create unique filename
         const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-        const filename = file.name.replace(/\.[^/.]+$/, "") + "-" + uniqueSuffix + path.extname(file.name);
+        const extension = path.extname(file.name);
+        const originalName = file.name.replace(/\.[^/.]+$/, "");
+        const sanitizedName = originalName.replace(/[^a-zA-Z0-9-_]/g, "-").replace(/-+/g, "-"); // Replace special chars and collapse multiple hyphens
+        const filename = sanitizedName + "-" + uniqueSuffix + extension;
 
-        // Define upload path (public/uploads/[folder])
+        // Define upload path (root/uploads/[folder])
         // Sanitize folder to prevent directory traversal
         const safeFolder = folder.replace(/[^a-zA-Z0-9-_]/g, "");
-        const uploadDir = path.join(process.cwd(), "public/uploads", safeFolder);
+        const uploadDir = path.join(process.cwd(), "uploads", safeFolder);
 
         console.log("Upload Debug [2/4]: Target Dir:", uploadDir);
 

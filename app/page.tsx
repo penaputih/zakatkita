@@ -10,10 +10,12 @@ import { PrayerWidget } from "@/components/PrayerWidget";
 import { DailyWisdom } from "@/components/DailyWisdom";
 import { getPrayerTimes } from "@/lib/api";
 import { RunningText } from "@/components/RunningText";
+import { getSession } from "@/lib/auth";
 
 export const dynamic = "force-dynamic";
 
 export default async function Home() {
+  const session = await getSession();
   const prayerData = await getPrayerTimes("Bandung");
 
   const campaignsData = await prisma.campaign.findMany({
@@ -52,7 +54,7 @@ export default async function Home() {
     <main className="min-h-screen bg-neutral-50 dark:bg-slate-950 pb-28">
       {/* Sticky Header Group */}
       <div className="sticky top-0 z-40 w-full bg-white/95 dark:bg-slate-950/95 backdrop-blur-sm">
-        <Header />
+        <Header user={session?.user} />
         <RunningText />
       </div>
 
