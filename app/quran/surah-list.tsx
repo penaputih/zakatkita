@@ -21,7 +21,7 @@ export function SurahList({ surahs }: SurahProps) {
     return (
         <div className="space-y-6">
             {/* Search Bar */}
-            <div className="sticky top-16 z-30 bg-white/80 backdrop-blur-md p-4 -mx-4 shadow-sm border-b border-neutral-100">
+            <div className="sticky top-0 z-40 bg-white/95 backdrop-blur-md p-4 -mx-4 shadow-sm border-b border-neutral-100">
                 <div className="relative">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400 w-5 h-5" />
                     <Input

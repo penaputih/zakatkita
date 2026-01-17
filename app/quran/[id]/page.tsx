@@ -3,6 +3,7 @@ import { Header } from "@/components/Header";
 import { AyahList } from "./ayah-list";
 import { FloatingBottomNav } from "@/components/FloatingBottomNav";
 import { notFound } from "next/navigation";
+import { ClientQuranDetail } from "@/components/ClientQuranDetail";
 
 export const dynamic = "force-dynamic";
 
@@ -18,7 +19,9 @@ export default async function QuranDetailPage({ params }: PageProps) {
 
     const surah = await getSurahDetail(surahNumber);
 
-    if (!surah) notFound();
+    if (!surah) {
+        return <ClientQuranDetail id={id} />;
+    }
 
     return (
         <main className="min-h-screen bg-white pb-28">
