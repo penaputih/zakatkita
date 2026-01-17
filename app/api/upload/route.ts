@@ -15,6 +15,10 @@ export async function POST(request: NextRequest) {
         const bytes = await file.arrayBuffer();
         const buffer = Buffer.from(bytes);
 
+        // Debugging Logs
+        const currentDir = process.cwd();
+        console.log("Upload Debug [1/4]: Process CWD:", currentDir);
+
         // Create unique filename
         const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
         const filename = file.name.replace(/\.[^/.]+$/, "") + "-" + uniqueSuffix + path.extname(file.name);
@@ -24,23 +28,35 @@ export async function POST(request: NextRequest) {
         const safeFolder = folder.replace(/[^a-zA-Z0-9-_]/g, "");
         const uploadDir = path.join(process.cwd(), "public/uploads", safeFolder);
 
+        console.log("Upload Debug [2/4]: Target Dir:", uploadDir);
+
         // Ensure directory exists
         try {
             await mkdir(uploadDir, { recursive: true });
-        } catch (e) {
-            // Ignore if exists
+            console.log("Upload Debug [3/4]: Mkdir success (or existed)");
+        } catch (e: any) {
+            console.error("Upload Debug: Mkdir Failed:", e);
+            if (e.code !== 'EEXIST') {
+                return NextResponse.json({ success: false, message: `Server Error: Cannot create folder. ${e.code}` }, { status: 500 });
+            }
         }
 
         const filepath = path.join(uploadDir, filename);
 
-        await writeFile(filepath, buffer);
+        try {
+            await writeFile(filepath, buffer);
+            console.log("Upload Debug [4/4]: WriteFile success:", filepath);
+        } catch (e: any) {
+            console.error("Upload Debug: WriteFile Failed:", e);
+            return NextResponse.json({ success: false, message: `Server Error: Cannot save file. ${e.code}` }, { status: 500 });
+        }
 
         // Return the public URL
         const publicUrl = `/uploads/${safeFolder}/${filename}`;
 
         return NextResponse.json({ success: true, url: publicUrl });
     } catch (error) {
-        console.error("Upload error:", error);
+        console.error("Upload Fatal Error:", error);
         return NextResponse.json({ success: false, message: "Upload failed" }, { status: 500 });
     }
 }
