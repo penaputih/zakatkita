@@ -12,11 +12,11 @@ interface ShareButtonProps {
     className?: string;
 }
 
-export function ShareButton({ title = "Zakat Kita", text = "Mari berbagi kebaikan.", url, className }: ShareButtonProps) {
+export function ShareButton({ title = "Daarussyifa Mobile", text = "Mari berbagi kebaikan.", url, className }: ShareButtonProps) {
     const handleShare = async () => {
         const shareData = {
-            title,
-            text,
+            title: "Daarussyifa Mobile",
+            text: `${title}\n\nBaca selengkapnya di Daarussyifa Mobile:`,
             url: url || window.location.href,
         };
 

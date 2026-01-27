@@ -19,6 +19,7 @@ interface WakafClientProps {
     title?: string | null;
     category?: string | null;
     totalDonors?: number;
+    programId?: string;
 }
 
 export default function WakafClient({
@@ -30,7 +31,8 @@ export default function WakafClient({
     image,
     title,
     category,
-    totalDonors = 0
+    totalDonors = 0,
+    programId
 }: WakafClientProps) {
 
     const [raisedAmount, setRaisedAmount] = useState(initialRaised);
@@ -62,7 +64,7 @@ Kenapa harus berwakaf disini?
     return (
         <main className="min-h-screen bg-white dark:bg-slate-950 pb-28">
             {/* Custom Header - Transparent/Overlay */}
-            <div className="absolute top-0 left-0 right-0 z-40 p-4 flex items-center justify-between text-white">
+            <div className="fixed top-0 w-full max-w-[480px] left-1/2 -translate-x-1/2 z-40 p-4 flex items-center justify-between text-white">
                 <Link href="/">
                     <Button variant="ghost" size="icon" className="rounded-full bg-black/20 hover:bg-black/30 text-white hover:text-white backdrop-blur-sm">
                         <ArrowLeft className="size-6" />
@@ -159,7 +161,7 @@ Kenapa harus berwakaf disini?
             </article>
 
             {/* Bottom Floating CTA */}
-            <div className="fixed bottom-0 left-0 right-0 p-4 bg-white dark:bg-slate-950 border-t border-border z-50 flex items-center gap-4 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
+            <div className="fixed bottom-0 w-full max-w-[480px] left-1/2 -translate-x-1/2 p-4 bg-white dark:bg-slate-950 border-t border-border z-50 flex items-center gap-4 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
                 <div className="hidden sm:block flex-1">
                     <p className="text-xs text-muted-foreground">Minimal Wakaf</p>
                     <p className="font-bold text-primary">Rp 50.000</p>
@@ -181,6 +183,7 @@ Kenapa harus berwakaf disini?
                 title="Wakaf Asrama"
                 suggestedAmounts={[50000, 100000, 250000, 500000, 1000000, 2500000]}
                 onSuccess={handlePaymentSuccess}
+                programId={programId}
             />
         </main>
     );

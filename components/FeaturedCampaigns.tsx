@@ -35,7 +35,7 @@ export function FeaturedCampaigns({ campaigns }: { campaigns: SerializableCampai
                         const progress = Number(campaign.currentAmount) > 0 ? Math.max(1, Math.min(rawProgress, 100)) : 0;
                         return (
                             <Link href={`/campaign/${campaign.id}`} key={campaign.id} className="block transition-transform hover:scale-[1.02] active:scale-95">
-                                <Card className="w-[280px] border-none shadow-md overflow-hidden rounded-2xl flex-none cursor-pointer">
+                                <Card className="w-[280px] border-none dark:border dark:border-slate-800 dark:bg-slate-900 shadow-md overflow-hidden rounded-2xl flex-none cursor-pointer">
                                     <div className={`h-32 w-full relative bg-cover bg-center ${(!campaign.bannerImage?.startsWith('http') && !campaign.bannerImage?.startsWith('/') && !campaign.bannerImage?.startsWith('data:')) ? campaign.bannerImage : ''}`} style={{ backgroundImage: (campaign.bannerImage?.startsWith('http') || campaign.bannerImage?.startsWith('/') || campaign.bannerImage?.startsWith('data:')) ? `url(${campaign.bannerImage})` : undefined }}>
                                         {(!campaign.bannerImage?.startsWith('http') && !campaign.bannerImage?.startsWith('/') && !campaign.bannerImage?.startsWith('data:')) && <div className={`w-full h-full ${campaign.bannerImage}`}></div>}
                                         <span className="absolute top-3 left-3 bg-black/40 backdrop-blur-md text-white text-[10px] font-bold px-2 py-1 rounded-sm border border-white/20">

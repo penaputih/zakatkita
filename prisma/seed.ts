@@ -16,26 +16,53 @@ const defaultMenuItems = [
     { label: "Jadwal Kajian", icon: "Calendar", color: "bg-amber-100 text-amber-600", href: "/jadwal-kajian", order: 4 },
     { label: "Al-Qur'an", icon: "BookOpen", color: "bg-violet-100 text-violet-600", href: "/quran", order: 5 },
     { label: "Info Majlis", icon: "Megaphone", color: "bg-cyan-100 text-cyan-600", href: "/berita", order: 6 },
-    { label: "Tanya Ustadz", icon: "BookOpen", color: "bg-orange-100 text-orange-600", href: "#", order: 7 },
-    { label: "Lainya", icon: "LayoutGrid", color: "bg-gray-100 text-gray-600", href: "#", order: 8 },
+    { label: "Tanya Ustadz", icon: "MessageCircleQuestion", color: "bg-orange-100 text-orange-600", href: "/tanya-ustadz", order: 7 },
+    { label: "Waris", icon: "Scale", color: "bg-emerald-100 text-emerald-600", href: "/waris", order: 8 },
 ];
 
 async function main() {
     console.log("Start seeding ...")
 
     // 1. Seed Admin User
-    const password = await hash('admin123', 12)
+    const hashedPassword = await hash('admin123', 12)
     const user = await prisma.user.upsert({
-        where: { email: 'admin@zakatkita.com' },
-        update: {},
-        create: {
-            email: 'admin@zakatkita.com',
-            name: 'Super Admin',
-            password,
-            role: 'ADMIN',
+        where: { email: 'admin@daarussyifa.com' },
+        update: {
+            password: hashedPassword,
+            isVerified: true,
+            canAccessWaris: true,
+            role: "ADMIN"
         },
-    })
+        create: {
+            email: "admin@daarussyifa.com",
+            name: "Admin",
+            password: hashedPassword,
+            role: "ADMIN",
+            isVerified: true,
+            canAccessWaris: true,
+        },
+    });
     console.log({ user })
+
+    // 1b. Seed Contributor User
+    const contributorPassword = await hash('contributor123', 12)
+    const contributor = await prisma.user.upsert({
+        where: { email: 'contributor@daarussyifa.com' },
+        update: {
+            password: contributorPassword,
+            isVerified: true,
+            isContributor: true,
+        },
+        create: {
+            email: "contributor@daarussyifa.com",
+            name: "Contributor User",
+            password: contributorPassword,
+            role: "MEMBER",
+            isVerified: true,
+            isContributor: true,
+        },
+    });
+    console.log({ contributor })
 
     // 2. Seed Menu Items
     for (const item of defaultMenuItems) {
@@ -64,10 +91,10 @@ async function main() {
 
     // 4. Seed Default Settings
     const defaultSettings = [
-        { key: "majlisName", value: "Zakat Kita" },
+        { key: "majlisName", value: "Daarussyifa Mobile" },
         { key: "majlisAddress", value: "Jl. Raya Bandung - Sumedang" },
         { key: "majlisPhone", value: "+62 812-3456-7890" },
-        { key: "runningText_content", value: "Selamat Datang di Aplikasi Zakat Kita. Sucikan Harta, Bersihkan Jiwa. Salurkan Zakat, Infaq, dan Sedekah anda melalui kami." },
+        { key: "runningText_content", value: "Selamat Datang di Aplikasi Daarussyifa Mobile. Sucikan Harta, Bersihkan Jiwa. Salurkan Zakat, Infaq, dan Sedekah anda melalui kami." },
         { key: "runningText_speed", value: "20" },
         { key: "runningText_isActive", value: "true" },
         { key: "zakatWidgetActive", value: "true" },

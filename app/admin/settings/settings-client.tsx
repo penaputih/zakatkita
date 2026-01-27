@@ -62,7 +62,7 @@ export default function SettingsClient({ initialData }: { initialData: SettingsD
                     <CardContent className="space-y-4">
                         <div className="space-y-2">
                             <Label htmlFor="majlisName">Nama Majlis / Komunitas</Label>
-                            <Input id="majlisName" name="majlisName" defaultValue={initialData.majlisName || "Zakat Kita"} />
+                            <Input id="majlisName" name="majlisName" defaultValue={initialData.majlisName || "Daarussyifa Mobile"} />
                         </div>
                         <div className="space-y-2">
                             <Label htmlFor="majlisAddress">Alamat Lengkap</Label>
@@ -71,6 +71,66 @@ export default function SettingsClient({ initialData }: { initialData: SettingsD
                         <div className="space-y-2">
                             <Label htmlFor="majlisPhone">Nomor Telepon / WhatsApp</Label>
                             <Input id="majlisPhone" name="majlisPhone" defaultValue={initialData.majlisPhone || ""} placeholder="+62..." />
+                        </div>
+                    </CardContent>
+                    <CardFooter className="border-t px-6 py-4">
+                        <Button type="submit" disabled={isPending}>
+                            {isPending && <Loader2 className="animate-spin mr-2 h-4 w-4" />}
+                            Simpan Perubahan
+                        </Button>
+                    </CardFooter>
+                </Card>
+
+                {/* Informasi Aplikasi */}
+                <Card>
+                    <CardHeader>
+                        <CardTitle>Informasi Aplikasi</CardTitle>
+                        <CardDescription>Deskripsi tentang aplikasi yang akan muncul di menu "Tentang Aplikasi".</CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                        <div className="space-y-2">
+                            <Label htmlFor="app_description">Deskripsi Aplikasi</Label>
+                            <Textarea
+                                id="app_description"
+                                name="app_description"
+                                defaultValue={initialData.app_description || ""}
+                                placeholder="Jelaskan tentang aplikasi ini..."
+                                className="min-h-[150px]"
+                            />
+                        </div>
+                    </CardContent>
+                    <CardFooter className="border-t px-6 py-4">
+                        <Button type="submit" disabled={isPending}>
+                            {isPending && <Loader2 className="animate-spin mr-2 h-4 w-4" />}
+                            Simpan Perubahan
+                        </Button>
+                    </CardFooter>
+                </Card>
+
+                {/* Kontak Layanan */}
+                <Card>
+                    <CardHeader>
+                        <CardTitle>Kontak Layanan</CardTitle>
+                        <CardDescription>Informasi kontak yang akan muncul di menu "Kontak / Hubungi Kami".</CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                        <div className="space-y-2">
+                            <Label htmlFor="contact_email">Email Support</Label>
+                            <Input id="contact_email" name="contact_email" type="email" defaultValue={initialData.contact_email || ""} placeholder="admin@example.com" />
+                        </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="contact_whatsapp">WhatsApp Admin</Label>
+                            <Input id="contact_whatsapp" name="contact_whatsapp" defaultValue={initialData.contact_whatsapp || ""} placeholder="628123456789" />
+                            <p className="text-xs text-muted-foreground">Gunakan format internasional (contoh: 628123456789) tanpa tanda + atau spasi.</p>
+                        </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="contact_instagram">Instagram Username</Label>
+                            <div className="flex">
+                                <span className="inline-flex items-center px-3 rounded-l-md border border-r-0 border-input bg-muted text-muted-foreground text-sm">
+                                    @
+                                </span>
+                                <Input id="contact_instagram" name="contact_instagram" defaultValue={initialData.contact_instagram || ""} placeholder="username" className="rounded-l-none" />
+                            </div>
                         </div>
                     </CardContent>
                     <CardFooter className="border-t px-6 py-4">

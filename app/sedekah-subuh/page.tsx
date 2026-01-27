@@ -27,5 +27,6 @@ export default async function SedekahSubuhPage() {
         bankAccount={bankAccount}
         totalDonations={totalDonations}
         totalDonors={totalDonors}
+        programId={menuItem?.id}
     />;
 }

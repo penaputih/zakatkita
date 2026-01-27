@@ -41,6 +41,7 @@ export default async function WakafAsramaPage() {
             title={pageTitle}
             category={categoryLabel}
             totalDonors={totalDonors}
+            programId={menuItem?.id}
         />
     );
 }

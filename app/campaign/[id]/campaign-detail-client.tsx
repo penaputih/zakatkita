@@ -54,7 +54,7 @@ export default function CampaignDetailClient({
     return (
         <main className="min-h-screen bg-neutral-50 dark:bg-slate-950 pb-28">
             {/* Header */}
-            <div className="bg-white dark:bg-slate-950 sticky top-0 z-40 border-b border-border/40 px-4 py-4 flex items-center justify-between">
+            <div className="bg-white dark:bg-slate-950 fixed w-full max-w-[480px] left-1/2 -translate-x-1/2 top-0 z-40 border-b border-border/40 px-4 py-4 flex items-center justify-between">
                 <div className="flex items-center gap-3">
                     <Link href="/" className="p-2 rounded-full hover:bg-muted transition-colors">
                         <ArrowLeft className="size-5" />
@@ -68,7 +68,7 @@ export default function CampaignDetailClient({
             </div>
 
             {/* Hero Image */}
-            <div className="w-full aspect-video bg-muted relative overflow-hidden">
+            <div className="w-full aspect-video bg-muted relative overflow-hidden mt-16">
                 {campaign.bannerImage ? (
                     <div
                         className="w-full h-full bg-cover bg-center transition-transform hover:scale-105 duration-700"
@@ -135,7 +135,7 @@ export default function CampaignDetailClient({
             </div>
 
             {/* Bottom Floating CTA */}
-            <div className="fixed bottom-0 left-0 right-0 p-4 bg-white dark:bg-slate-950 border-t border-border z-50 flex items-center gap-4">
+            <div className="fixed bottom-0 w-full max-w-[480px] left-1/2 -translate-x-1/2 p-4 bg-white dark:bg-slate-950 border-t border-border z-50 flex items-center gap-4">
                 <div className="flex-1">
                     <p className="text-xs text-muted-foreground">Minimal Donasi</p>
                     <p className="font-bold text-primary">Rp 10.000</p>

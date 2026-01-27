@@ -2,6 +2,8 @@ import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono, Scheherazade_New } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
+import { ThemeProvider } from "@/components/theme-provider";
+import { DesktopLayoutWrapper } from "@/components/DesktopLayoutWrapper";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -21,8 +23,9 @@ const arab = Scheherazade_New({
 });
 
 export const metadata: Metadata = {
-  title: "Zakat Kita - Daarussyifa Super Apps",
-  description: "Aplikasi majelis ta'lim dan dzikir daarussyifa untuk memudahkan hitung dan bayar zakat harian, sedekah subuh, wakaf, quran, hadits, dan lain lain",
+  title: "Daarussyifa Mobile",
+  description: "Aplikasi Zakat, Infaq, dan Sedekah terpercaya dari Daarussyifa.",
+  manifest: "/manifest.json",
 };
 
 export const viewport: Viewport = {
@@ -41,8 +44,17 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${arab.variable} antialiased font-sans`}
       >
-        {children}
-        <Toaster />
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="light"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <DesktopLayoutWrapper>
+            {children}
+          </DesktopLayoutWrapper>
+          <Toaster />
+        </ThemeProvider>
       </body>
     </html>
   );

@@ -35,6 +35,17 @@ export async function updateSettings(formData: FormData) {
         await upsertSetting("runningText_speed", runningText_speed);
         await upsertSetting("runningText_isActive", runningText_isActive);
 
+        // App Info & Contact
+        const app_description = formData.get("app_description") as string;
+        const contact_email = formData.get("contact_email") as string;
+        const contact_whatsapp = formData.get("contact_whatsapp") as string;
+        const contact_instagram = formData.get("contact_instagram") as string;
+
+        await upsertSetting("app_description", app_description);
+        await upsertSetting("contact_email", contact_email);
+        await upsertSetting("contact_whatsapp", contact_whatsapp);
+        await upsertSetting("contact_instagram", contact_instagram);
+
         revalidatePath("/admin/settings");
         revalidatePath("/"); // Update home if these settings are used there
         return { success: true };

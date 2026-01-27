@@ -10,6 +10,7 @@ export async function createNews(formData: FormData) {
     // For MVP, we are not handling image upload yet, just a placeholder or URL input
     //Ideally effectively utilize cloud storage like AWS S3 or Uploadthing.
     const image = (formData.get("image") as string) || "bg-emerald-100";
+    const isFeatured = formData.get("isFeatured") === "true";
 
     if (!title || !content || !author) {
         return { error: "Semua field harus diisi" };
@@ -22,6 +23,7 @@ export async function createNews(formData: FormData) {
                 content,
                 author,
                 image,
+                isFeatured,
             },
         });
         revalidatePath("/admin/news");
@@ -50,6 +52,7 @@ export async function updateNews(id: string, formData: FormData) {
     const content = formData.get("content") as string;
     const author = formData.get("author") as string;
     const image = formData.get("image") as string;
+    const isFeatured = formData.get("isFeatured") === "true";
 
     if (!title || !content || !author) {
         return { error: "Semua field harus diisi" };
@@ -62,6 +65,7 @@ export async function updateNews(id: string, formData: FormData) {
                 title,
                 content,
                 author,
+                isFeatured,
                 ...(image ? { image } : {}), // Only update image if provided
             },
         });

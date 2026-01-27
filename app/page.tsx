@@ -1,7 +1,7 @@
 import { Header } from "@/components/Header";
 import { HeroCarousel } from "@/components/HeroCarousel";
 import { QuickActionGrid } from "@/components/QuickActionGrid";
-import { DailyZakatWidget } from "@/components/DailyZakatWidget";
+
 import { FeaturedCampaigns } from "@/components/FeaturedCampaigns";
 import { FloatingBottomNav } from "@/components/FloatingBottomNav";
 import { prisma } from "@/lib/prisma";
@@ -11,6 +11,7 @@ import { DailyWisdom } from "@/components/DailyWisdom";
 import { getPrayerTimes } from "@/lib/api";
 import { RunningText } from "@/components/RunningText";
 import { getSession } from "@/lib/auth";
+import { NewsList } from "@/components/NewsList";
 
 export const dynamic = "force-dynamic";
 
@@ -36,6 +37,29 @@ export default async function Home() {
     orderBy: { createdAt: "desc" }
   });
 
+  let latestNewsRaw: any[] = [];
+  try {
+    latestNewsRaw = await prisma.$queryRaw`
+        SELECT * FROM News 
+        WHERE isFeatured = 1 
+        ORDER BY createdAt DESC 
+        LIMIT 5
+      `;
+  } catch (e) {
+    console.error("Failed to fetch featured news, falling back to all news", e);
+    latestNewsRaw = await prisma.$queryRaw`
+        SELECT * FROM News 
+        ORDER BY createdAt DESC 
+        LIMIT 5
+      `;
+  }
+
+  const latestNews = latestNewsRaw.map((item) => ({
+    ...item,
+    createdAt: new Date(item.createdAt), // Ensure date format
+  }));
+
+  // Fetch widget settings
   const hadithWidgetActive = await prisma.settings.findUnique({ where: { key: "hadithWidgetActive" } });
   const prayerWidgetActive = await prisma.settings.findUnique({ where: { key: "prayerWidgetActive" } });
   const dailyWisdomActive = await prisma.settings.findUnique({ where: { key: "dailyWisdomActive" } });
@@ -74,18 +98,16 @@ export default async function Home() {
       {/* 3. Quick Action Grid */}
       <QuickActionGrid />
 
-      {/* Update Section (Hero Carousel moved here) */}
+      {/* Update Section (Hero Carousel + News) */}
       <section className="mb-6">
         <h2 className="px-4 text-lg font-bold text-slate-800 dark:text-slate-100 mb-3">
           Update
         </h2>
         <HeroCarousel slides={activeBanners} />
+        <NewsList news={latestNews} />
       </section>
 
-      {/* Daily Zakat Widget */}
-      {isZakatActive && (
-        <DailyZakatWidget />
-      )}
+
 
       {/* Daily Wisdom (Doa) */}
       {isWisdomActive && (

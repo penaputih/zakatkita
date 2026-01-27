@@ -14,12 +14,22 @@ import {
     Menu,
     Image as ImageIcon,
     Monitor,
-    Tag
+    Tag,
+    Home
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger, SheetTitle, SheetDescription } from "@/components/ui/sheet";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { logout } from "@/app/profile/actions";
+import { useTheme } from "next-themes";
+import { Moon, Sun, Laptop } from "lucide-react";
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const navItems = [
     { label: "Dashboard", href: "/admin", icon: LayoutDashboard },
@@ -38,6 +48,7 @@ export default function AdminLayout({
     children: React.ReactNode;
 }) {
     const pathname = usePathname();
+    const { setTheme } = useTheme();
 
     return (
         <div className="flex min-h-screen w-full bg-muted/40">
@@ -45,7 +56,7 @@ export default function AdminLayout({
             <aside className="hidden w-64 flex-col border-r bg-background lg:flex fixed h-full z-30">
                 <div className="flex h-14 items-center border-b px-6 lg:h-[60px]">
                     <Link href="/admin" className="flex items-center gap-2 font-semibold">
-                        <span className="text-xl text-primary">ZakatKita Admin</span>
+                        <span className="text-xl text-primary">Daarussyifa Admin</span>
                     </Link>
                 </div>
                 <div className="flex-1 overflow-auto py-2">
@@ -87,20 +98,28 @@ export default function AdminLayout({
                     </nav>
                 </div>
                 <div className="mt-auto p-4 border-t">
+                    <Link href="/">
+                        <Button variant="outline" className="w-full justify-start gap-2 mb-4 group" size="sm">
+                            <Home className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
+                            Ke Halaman Utama
+                        </Button>
+                    </Link>
                     <div className="flex items-center gap-3 mb-4">
                         <Avatar>
                             <AvatarImage src="https://github.com/shadcn.png" />
                             <AvatarFallback>AD</AvatarFallback>
                         </Avatar>
                         <div>
-                            <p className="text-sm font-medium">Admin User</p>
-                            <p className="text-xs text-muted-foreground">admin@zakatkita.com</p>
+                            <p className="text-sm font-medium">Super Admin</p>
+                            <p className="text-xs text-muted-foreground">admin@daarussyifa.com</p>
                         </div>
                     </div>
-                    <Button variant="outline" className="w-full justify-start gap-2" size="sm">
-                        <LogOut className="h-4 w-4" />
-                        Logout
-                    </Button>
+                    <form action={logout}>
+                        <Button variant="outline" className="w-full justify-start gap-2" size="sm">
+                            <LogOut className="h-4 w-4" />
+                            Logout
+                        </Button>
+                    </form>
                 </div>
             </aside>
 
@@ -123,16 +142,23 @@ export default function AdminLayout({
                             <div className="sr-only">
                                 <SheetTitle>Navigation Menu</SheetTitle>
                                 <SheetDescription>
-                                    Main navigation for ZakatKita Admin dashboard.
+                                    Main navigation for Daarussyifa Mobile Admin dashboard.
                                 </SheetDescription>
                             </div>
                             <nav className="grid gap-2 text-lg font-medium">
                                 <Link
                                     href="/admin"
-                                    className="flex items-center gap-2 text-lg font-semibold mb-4 text-primary"
+                                    className="flex flex-col gap-1 mb-6 pl-2 mt-6"
                                 >
-                                    ZakatKita Admin
+                                    <div className="flex items-center gap-2">
+                                        <div className="size-8 rounded-lg bg-primary/10 flex items-center justify-center">
+                                            <Monitor className="size-5 text-primary" />
+                                        </div>
+                                        <span className="text-xl font-bold text-primary">Daarussyifa</span>
+                                    </div>
+                                    <span className="text-sm font-medium text-muted-foreground ml-1">Admin Dashboard</span>
                                 </Link>
+
                                 {navItems.map((item) => (
                                     <Link
                                         key={item.href}
@@ -146,12 +172,42 @@ export default function AdminLayout({
                                         {item.label}
                                     </Link>
                                 ))}
+                                <div className="mt-4 pt-4 border-t">
+                                    <Link
+                                        href="/"
+                                        className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground hover:text-primary transition-colors"
+                                    >
+                                        <Home className="h-5 w-5" />
+                                        Ke Halaman Utama
+                                    </Link>
+                                </div>
                             </nav>
                         </SheetContent>
                     </Sheet>
                     <div className="w-full flex-1">
                         <h1 className="text-lg font-semibold">{navItems.find(n => n.href === pathname)?.label || "Dashboard"}</h1>
                     </div>
+                    {/* Theme Switcher */}
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <Button variant="outline" size="icon">
+                                <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+                                <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+                                <span className="sr-only">Toggle theme</span>
+                            </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                            <DropdownMenuItem onClick={() => setTheme("light")}>
+                                Light
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => setTheme("dark")}>
+                                Dark
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => setTheme("system")}>
+                                System
+                            </DropdownMenuItem>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
                 </header>
 
                 {/* Content */}

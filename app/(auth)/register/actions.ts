@@ -23,6 +23,8 @@ export async function register(prevState: any, formData: FormData) {
         }
 
         const hashedPassword = await hash(password, 10);
+        const code = Math.floor(100000 + Math.random() * 900000).toString();
+        const expires = new Date(Date.now() + 30 * 60 * 1000); // 30 mins
 
         await prisma.user.create({
             data: {
@@ -30,13 +32,19 @@ export async function register(prevState: any, formData: FormData) {
                 email,
                 password: hashedPassword,
                 role: "MEMBER",
+                isVerified: false,
+                verificationCode: code,
+                verificationCodeExpires: expires
             },
         });
+
+        const { sendVerificationEmail } = await import("@/lib/mail");
+        await sendVerificationEmail(email, code);
 
     } catch (error) {
         console.error("Register Error:", error);
         return { error: "Gagal mendaftar. Silahkan coba lagi." };
     }
 
-    redirect("/login?registered=true");
+    redirect(`/verify?email=${encodeURIComponent(email)}`);
 }

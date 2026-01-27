@@ -112,7 +112,7 @@ export function PaymentDrawer({
 
     return (
         <Drawer open={isOpen} onOpenChange={(open) => !open && onClose()}>
-            <DrawerContent className="max-h-[85vh] flex flex-col rounded-t-[2rem]">
+            <DrawerContent className="max-h-[85vh] flex flex-col rounded-t-[2rem] max-w-[480px] mx-auto inset-x-0">
                 <div className="mx-auto w-full max-w-sm flex flex-col h-full min-h-0">
                     <DrawerHeader className="flex-none">
                         <DrawerTitle className="text-center text-xl">

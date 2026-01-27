@@ -9,7 +9,7 @@ export default async function QuranPage() {
     const surahs = await getSurahList();
 
     return (
-        <main className="min-h-screen bg-neutral-50 pb-28">
+        <main className="min-h-screen bg-neutral-50 dark:bg-slate-950 pb-28">
             <Header title="Al-Qur'an Digital" showBack backUrl="/" />
 
             <div className="px-4">

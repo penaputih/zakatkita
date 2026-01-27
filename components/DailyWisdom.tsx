@@ -25,13 +25,13 @@ export function DailyWisdom() {
         if (navigator.share && doa) {
             navigator.share({
                 title: doa.doa,
-                text: `${doa.doa}\n\n"${doa.artinya}"\n\n— Zakat Kita App`,
+                text: `${doa.doa}\n\n"${doa.artinya}"\n\n— Daarussyifa Mobile App`,
             }).catch(console.error);
         }
     };
 
     return (
-        <div className="bg-white rounded-2xl p-6 shadow-sm border border-neutral-100 relative overflow-hidden">
+        <div className="bg-white dark:bg-slate-900 rounded-2xl p-6 shadow-sm border border-neutral-100 dark:border-slate-800 relative overflow-hidden">
             {/* Decorative Quote Icon */}
             <div className="absolute top-0 right-0 p-4 opacity-5">
                 <Quote className="w-24 h-24 text-emerald-600 rotate-180" />
@@ -43,7 +43,7 @@ export function DailyWisdom() {
                         <div className="w-8 h-8 rounded-full bg-orange-100 flex items-center justify-center">
                             <Quote className="w-4 h-4 text-orange-600" />
                         </div>
-                        <h3 className="font-bold text-neutral-800">Doa Harian</h3>
+                        <h3 className="font-bold text-neutral-800 dark:text-slate-100">Doa Harian</h3>
                     </div>
                     <Button variant="ghost" size="icon" onClick={fetchDoa} disabled={loading} className="h-8 w-8 text-neutral-400">
                         <RefreshCw className={`w-4 h-4 ${loading ? "animate-spin" : ""}`} />
@@ -58,17 +58,17 @@ export function DailyWisdom() {
                     </div>
                 ) : doa ? (
                     <div className="text-center space-y-4">
-                        <h4 className="font-bold text-lg text-emerald-800">{doa.doa}</h4>
+                        <h4 className="font-bold text-lg text-emerald-800 dark:text-emerald-400">{doa.doa}</h4>
 
-                        <p className="font-arab text-2xl text-neutral-800 leading-loose" dir="rtl">
+                        <p className="font-arab text-2xl text-neutral-800 dark:text-slate-100 leading-loose" dir="rtl">
                             {doa.ayat}
                         </p>
 
                         <div className="space-y-2">
-                            <p className="text-xs text-emerald-600 font-medium italic">
+                            <p className="text-xs text-emerald-600 dark:text-emerald-500 font-medium italic">
                                 {doa.latin}
                             </p>
-                            <p className="text-sm text-neutral-600 leading-relaxed">
+                            <p className="text-sm text-neutral-600 dark:text-slate-400 leading-relaxed">
                                 {doa.artinya}
                             </p>
                         </div>

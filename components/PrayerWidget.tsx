@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react";
 import { HijriDate, PrayerTimes } from "@/lib/api";
 import { MapPin, Clock, Loader2, RefreshCw, CheckCircle2, XCircle } from "lucide-react";
-import { fetchPrayerTimesByCoords } from "@/app/actions";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
 
@@ -40,26 +39,33 @@ export function PrayerWidget({ timings: initialTimings, hijri: initialHijri, cit
             async (position) => {
                 try {
                     const { latitude, longitude } = position.coords;
-                    const res = await fetchPrayerTimesByCoords(latitude, longitude);
 
-                    if (res.success && res.data) {
-                        setTimings(res.data.timings);
-                        setHijri(res.data.date);
+                    // Use new Internal API
+                    const res = await fetch(`/api/prayer-times?lat=${latitude}&lng=${longitude}`);
+
+                    if (!res.ok) throw new Error("Gagal mengambil data");
+
+                    const data = await res.json();
+
+                    if (data.jadwal) {
+                        setTimings(data.jadwal);
+                        // Optional: update Hijri if returned, API returns data.date which matches structure?
+                        // The server snippet returns `date: data.data.date.hijri`
+                        if (data.date) setHijri(data.date);
+
                         setCityName("Lokasi Anda");
                         setUpdateStatus('success');
-
-                        // Reset back to idle after 3 seconds to show refresh icon again on hover? 
-                        // Or keep success to show it worked? User asked for notification beside location.
-                        // I'll keep it as success state.
-
-
                     } else {
-                        throw new Error("Gagal mengambil data API");
+                        throw new Error("Data jadwal kosong");
                     }
                 } catch (error) {
                     console.error("Loc Error:", error);
                     setUpdateStatus('error');
-
+                    toast({
+                        title: "Gagal memuat jadwal",
+                        description: "Tidak dapat mengambil jadwal sholat dari lokasi Anda.",
+                        variant: "destructive"
+                    });
                 }
             },
             (error) => {

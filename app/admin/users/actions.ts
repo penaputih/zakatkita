@@ -86,3 +86,37 @@ export async function toggleUserVerification(id: string, isVerified: boolean) {
         return { error: `Gagal mengubah status verifikasi user: ${error.message}` };
     }
 }
+
+export async function toggleUserWarisAccess(id: string, canAccess: boolean) {
+    try {
+        await prisma.user.update({
+            where: { id },
+            data: { canAccessWaris: canAccess },
+        });
+
+        revalidatePath("/admin/users");
+        return { success: true };
+    } catch (error: any) {
+        console.error("Error updating waris access:", error);
+        return { error: `Gagal mengubah status akses waris: ${error.message}` };
+    }
+}
+
+export async function toggleUserContributor(id: string, isContributor: boolean) {
+    try {
+        // Using executeRawUnsafe as a temporary workaround for persistent Prisma Client cache issues
+        // preventing the recognition of the new isContributor field.
+        // In a normal environment, prisma.user.update is preferred.
+        await prisma.$executeRawUnsafe(
+            `UPDATE User SET isContributor = ? WHERE id = ?`,
+            isContributor ? 1 : 0,
+            id
+        );
+
+        revalidatePath("/admin/users");
+        return { success: true };
+    } catch (error: any) {
+        console.error("Error updating contributor status:", error);
+        return { error: `Gagal mengubah status kontributor: ${error.message}` };
+    }
+}

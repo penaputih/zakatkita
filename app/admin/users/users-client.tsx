@@ -51,6 +51,8 @@ import { toast } from "sonner";
 interface SafeUser extends Omit<User, "password"> {
     password?: string;
     isVerified: boolean;
+    canAccessWaris: boolean;
+    isContributor: boolean;
 }
 
 export default function UsersClient({ initialData }: { initialData: SafeUser[] }) {
@@ -58,13 +60,13 @@ export default function UsersClient({ initialData }: { initialData: SafeUser[] }
     const [isPending, startTransition] = useTransition();
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        // ... existing logic
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
         startTransition(async () => {
             const res = await createUser(formData);
             if (res.success) {
                 setIsOpen(false);
-                // Optionally show toast success
             } else {
                 alert(res.error);
             }
@@ -89,6 +91,22 @@ export default function UsersClient({ initialData }: { initialData: SafeUser[] }
     const handleVerification = async (id: string, isVerified: boolean) => {
         startTransition(async () => {
             const res = await toggleUserVerification(id, isVerified);
+            if (!res.success) alert(res.error);
+        });
+    };
+
+    const handleWarisAccess = async (id: string, canAccess: boolean) => {
+        startTransition(async () => {
+            const { toggleUserWarisAccess } = await import("./actions");
+            const res = await toggleUserWarisAccess(id, canAccess);
+            if (!res.success) alert(res.error);
+        });
+    };
+
+    const handleContributor = async (id: string, isContributor: boolean) => {
+        startTransition(async () => {
+            const { toggleUserContributor } = await import("./actions");
+            const res = await toggleUserContributor(id, isContributor);
             if (!res.success) alert(res.error);
         });
     };
@@ -168,6 +186,8 @@ export default function UsersClient({ initialData }: { initialData: SafeUser[] }
                                 <TableHead>Email</TableHead>
                                 <TableHead>Role</TableHead>
                                 <TableHead>Status</TableHead>
+                                <TableHead>Akses Waris</TableHead>
+                                <TableHead>Contributor</TableHead>
                                 <TableHead>Terdaftar</TableHead>
                                 <TableHead className="w-[100px]">Aksi</TableHead>
                             </TableRow>
@@ -198,6 +218,28 @@ export default function UsersClient({ initialData }: { initialData: SafeUser[] }
                                         ) : (
                                             <Badge variant="outline" className="text-muted-foreground gap-1 border-dashed">
                                                 <XCircle className="h-3 w-3" /> Unverified
+                                            </Badge>
+                                        )}
+                                    </TableCell>
+                                    <TableCell>
+                                        {user.canAccessWaris ? (
+                                            <Badge className="bg-blue-100 text-blue-700 hover:bg-blue-100 border-none shadow-none gap-1">
+                                                <CheckCircle2 className="h-3 w-3" /> Granted
+                                            </Badge>
+                                        ) : (
+                                            <Badge variant="outline" className="text-muted-foreground gap-1 border-dashed">
+                                                <XCircle className="h-3 w-3" /> Denied
+                                            </Badge>
+                                        )}
+                                    </TableCell>
+                                    <TableCell>
+                                        {user.isContributor ? (
+                                            <Badge className="bg-purple-100 text-purple-700 hover:bg-purple-100 border-none shadow-none gap-1">
+                                                <CheckCircle2 className="h-3 w-3" /> Yes
+                                            </Badge>
+                                        ) : (
+                                            <Badge variant="outline" className="text-muted-foreground gap-1 border-dashed">
+                                                <XCircle className="h-3 w-3" /> No
                                             </Badge>
                                         )}
                                     </TableCell>
@@ -238,6 +280,26 @@ export default function UsersClient({ initialData }: { initialData: SafeUser[] }
                                                 ) : (
                                                     <DropdownMenuItem onClick={() => handleVerification(user.id, true)}>
                                                         <CheckCircle2 className="mr-2 h-4 w-4" /> Verifikasi User
+                                                    </DropdownMenuItem>
+                                                )}
+                                                <DropdownMenuSeparator />
+                                                {user.canAccessWaris ? (
+                                                    <DropdownMenuItem onClick={() => handleWarisAccess(user.id, false)}>
+                                                        <XCircle className="mr-2 h-4 w-4" /> Cabut Akses Waris
+                                                    </DropdownMenuItem>
+                                                ) : (
+                                                    <DropdownMenuItem onClick={() => handleWarisAccess(user.id, true)}>
+                                                        <CheckCircle2 className="mr-2 h-4 w-4" /> Beri Akses Waris
+                                                    </DropdownMenuItem>
+                                                )}
+                                                <DropdownMenuSeparator />
+                                                {user.isContributor ? (
+                                                    <DropdownMenuItem onClick={() => handleContributor(user.id, false)}>
+                                                        <XCircle className="mr-2 h-4 w-4" /> Hapus Contributor
+                                                    </DropdownMenuItem>
+                                                ) : (
+                                                    <DropdownMenuItem onClick={() => handleContributor(user.id, true)}>
+                                                        <CheckCircle2 className="mr-2 h-4 w-4" /> Jadikan Contributor
                                                     </DropdownMenuItem>
                                                 )}
                                                 <DropdownMenuSeparator />

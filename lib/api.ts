@@ -55,6 +55,13 @@ export interface SurahDetail extends Surah {
     suratSebelumnya: false | Surah;
 }
 
+export interface Tafsir {
+    nomor: number;
+    nama: string;
+    namaLatin: string;
+    tafsir: { ayat: number; teks: string }[];
+}
+
 export interface DailyDoa {
     id: number;
     doa: string;
@@ -84,17 +91,33 @@ export async function getPrayerTimes(city: string = "Bandung", country: string =
     }
 }
 
-// Quran API (EQuran.id)
+// Quran API (Equran.id)
+// API Docs: https://equran.id/apiv2/
+const QURAN_API_BASE = "https://equran.id/api/v2";
+
 export async function getSurahList() {
     try {
-        const res = await fetch("https://equran.id/api/v2/surat", {
-            next: { revalidate: 86400 } // Cache for 24 hours (data rarely changes)
+        const res = await fetch(`${QURAN_API_BASE}/surat`, {
+            next: { revalidate: 86400 } // Cache for 24 hours
         });
 
         if (!res.ok) throw new Error("Failed to fetch surah list");
 
-        const data = await res.json();
-        return data.data as Surah[];
+        const json = await res.json();
+        const data = json.data as any[];
+
+        // Map Equran response to our interface
+        return data.map((item: any) => ({
+            nomor: item.nomor,
+            nama: item.nama,
+            namaLatin: item.namaLatin,
+            jumlahAyat: item.jumlahAyat,
+            tempatTurun: item.tempatTurun,
+            arti: item.arti,
+            deskripsi: item.deskripsi,
+            audioFull: item.audioFull
+        })) as Surah[];
+
     } catch (error) {
         console.error("API Error (Quran List):", error);
         return [];
@@ -103,18 +126,58 @@ export async function getSurahList() {
 
 export async function getSurahDetail(nomor: number) {
     try {
-        const res = await fetch(`https://equran.id/api/v2/surat/${nomor}`, {
+        const res = await fetch(`${QURAN_API_BASE}/surat/${nomor}`, {
             next: { revalidate: 86400 }
         });
 
         if (!res.ok) throw new Error("Failed to fetch surah detail");
 
-        const data = await res.json();
-        return data.data as SurahDetail;
+        const json = await res.json();
+        const data = json.data;
+
+        // Map to SurahDetail interface
+        const detail: SurahDetail = {
+            nomor: data.nomor,
+            nama: data.nama,
+            namaLatin: data.namaLatin,
+            jumlahAyat: data.jumlahAyat,
+            tempatTurun: data.tempatTurun,
+            arti: data.arti,
+            deskripsi: data.deskripsi,
+            audioFull: data.audioFull,
+
+            // Map verses
+            ayat: data.ayat.map((verse: any) => ({
+                nomorAyat: verse.nomorAyat,
+                teksArab: verse.teksArab,
+                teksLatin: verse.teksLatin,
+                teksIndonesia: verse.teksIndonesia,
+                audio: verse.audio
+            })),
+            suratSelanjutnya: data.suratSelanjutnya,
+            suratSebelumnya: data.suratSebelumnya
+        };
+
+        return detail;
+
     } catch (error) {
         console.error("API Error (Quran Detail):", error);
         return null;
     }
+}
+
+export async function getTafsir(nomor: number) {
+    // Note: Gading Dev API combines tafsir in the surah response usually, 
+    // but the `tafsir` endpoint structure might differ. 
+    // We already get 'tafsir' field in getSurahDetail (the surah description).
+    // If per-verse tafsir is required, we need to check if Gading supports it or use existing logic.
+    // For now, returning null to gracefully fallback in UI as this API might not support per-verse tafsir in the same way.
+
+    // We can simulate the response structure if we want to extract tafsir from getSurahDetail if it had per-verse info,
+    // but typically it puts it in separate fields.
+    // Let's retry fetching surah again to see if we can extract 'tafsir' per verse if available, 
+    // or just return null for now to fix the crash first.
+    return null;
 }
 
 const FALLBACK_DOAS: DailyDoa[] = [

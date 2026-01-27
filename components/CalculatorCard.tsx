@@ -16,7 +16,7 @@ import {
 import { Calculator, ArrowRight, Upload, CheckCircle2, Loader2, X } from "lucide-react";
 import { submitTransaction } from "@/app/actions";
 
-export function CalculatorCard({ qrisImage }: { qrisImage?: string }) {
+export function CalculatorCard({ qrisImage, programId }: { qrisImage?: string; programId?: string }) {
     const [inputValue, setInputValue] = React.useState("");
     const [zakatAmount, setZakatAmount] = React.useState(0);
     const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
@@ -51,6 +51,9 @@ export function CalculatorCard({ qrisImage }: { qrisImage?: string }) {
         const formData = new FormData();
         formData.append("amount", zakatAmount.toString());
         formData.append("proofImage", selectedFile.name);
+        if (programId) {
+            formData.append("programId", programId);
+        }
 
         const result = await submitTransaction(formData);
 
@@ -83,7 +86,7 @@ export function CalculatorCard({ qrisImage }: { qrisImage?: string }) {
     }, [zakatAmount]);
 
     return (
-        <Card className="border-none shadow-xl shadow-primary/5 rounded-2xl overflow-hidden bg-white/90 backdrop-blur-sm">
+        <Card className="border-none shadow-xl shadow-primary/5 rounded-2xl overflow-hidden bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm">
             <CardHeader className="bg-primary/5 pb-8 pt-6">
                 <CardTitle className="flex items-center gap-2 text-primary text-lg">
                     <Calculator className="size-5" />
@@ -140,15 +143,15 @@ export function CalculatorCard({ qrisImage }: { qrisImage?: string }) {
                             <ArrowRight className="ml-2 size-5" />
                         </Button>
                     </DrawerTrigger>
-                    <DrawerContent className="rounded-t-[2rem]">
-                        <div className="mx-auto w-full max-w-sm">
-                            <DrawerHeader>
+                    <DrawerContent className="max-h-[85vh] flex flex-col rounded-t-[2rem]">
+                        <div className="mx-auto w-full max-w-sm flex flex-col h-full min-h-0">
+                            <DrawerHeader className="flex-none">
                                 <DrawerTitle className="text-center text-xl">
                                     {isSuccess ? "Pembayaran Berhasil" : "Konfirmasi Pembayaran"}
                                 </DrawerTitle>
                             </DrawerHeader>
 
-                            <div className="p-4 pb-0 space-y-6">
+                            <div className="p-4 pb-0 space-y-6 overflow-y-auto flex-1">
                                 {isSuccess ? (
                                     <div className="flex flex-col items-center justify-center py-8 space-y-4 animate-in fade-in zoom-in duration-300">
                                         <div className="size-20 bg-primary/10 rounded-full flex items-center justify-center">
@@ -168,7 +171,7 @@ export function CalculatorCard({ qrisImage }: { qrisImage?: string }) {
                                                 {qrisImage ? (
                                                     <img src={qrisImage} alt="QRIS" className="w-full h-full object-cover" />
                                                 ) : (
-                                                    <div className="absolute inset-0 bg-gray-100 flex items-center justify-center text-muted-foreground/30 font-bold text-3xl select-none">QRIS</div>
+                                                    <div className="absolute inset-0 bg-gray-100 dark:bg-slate-800 flex items-center justify-center text-muted-foreground/30 font-bold text-3xl select-none">QRIS</div>
                                                 )}
                                             </div>
                                             <div className="bg-primary/5 px-4 py-2 rounded-lg">
@@ -176,10 +179,10 @@ export function CalculatorCard({ qrisImage }: { qrisImage?: string }) {
                                             </div>
                                         </div>
 
-                                        <div className="space-y-3">
+                                        <div className="space-y-3 pb-4">
                                             <label className="text-sm font-medium block">Upload Bukti Transfer</label>
                                             <div className="flex items-center justify-center w-full">
-                                                <label htmlFor="dropzone-file" className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-300 rounded-xl cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors">
+                                                <label htmlFor="dropzone-file" className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-300 dark:border-slate-700 rounded-xl cursor-pointer bg-gray-50 dark:bg-slate-800/50 hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors">
                                                     {previewUrl ? (
                                                         <div className="relative w-full h-full p-2">
                                                             <img src={previewUrl} alt="Preview" className="w-full h-full object-contain rounded-lg" />
@@ -196,8 +199,8 @@ export function CalculatorCard({ qrisImage }: { qrisImage?: string }) {
                                                         </div>
                                                     ) : (
                                                         <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                                                            <Upload className="size-8 text-gray-400 mb-2" />
-                                                            <p className="text-xs text-gray-500 text-center px-4">Tap to upload proof image</p>
+                                                            <Upload className="size-8 text-gray-400 dark:text-slate-500 mb-2" />
+                                                            <p className="text-xs text-gray-500 dark:text-slate-400 text-center px-4">Tap to upload proof image</p>
                                                         </div>
                                                     )}
                                                     <input id="dropzone-file" type="file" className="hidden" accept="image/*" onChange={handleFileChange} />
@@ -208,7 +211,7 @@ export function CalculatorCard({ qrisImage }: { qrisImage?: string }) {
                                 )}
                             </div>
 
-                            <DrawerFooter>
+                            <DrawerFooter className="flex-none pt-4 pb-8 sm:pb-6 bg-white dark:bg-slate-950 border-t border-border z-10">
                                 {isSuccess ? (
                                     <DrawerClose asChild>
                                         <Button className="w-full rounded-full h-12" size="lg" onClick={() => {

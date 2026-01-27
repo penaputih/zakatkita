@@ -121,6 +121,20 @@ export default function NewsClient({ initialData }: { initialData: SerializableN
                                 <Label htmlFor="content" className="text-right">Konten</Label>
                                 <Textarea id="content" name="content" defaultValue={editingNews?.content} className="col-span-3" required />
                             </div>
+                            <div className="grid grid-cols-4 items-center gap-4">
+                                <Label htmlFor="isFeatured" className="text-right">Unggulan</Label>
+                                <div className="col-span-3 flex items-center space-x-2">
+                                    <input
+                                        type="checkbox"
+                                        id="isFeatured"
+                                        name="isFeatured"
+                                        value="true"
+                                        defaultChecked={editingNews?.isFeatured}
+                                        className="h-4 w-4 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500"
+                                    />
+                                    <label htmlFor="isFeatured" className="text-sm text-muted-foreground">Tampilkan di Halaman Utama</label>
+                                </div>
+                            </div>
                             <ImageUpload id="image" name="image" label="Gambar Cover" defaultImage={editingNews?.image || null} folder="news" />
                             <DialogFooter>
                                 <Button type="submit" disabled={isPending}>
@@ -161,7 +175,12 @@ export default function NewsClient({ initialData }: { initialData: SerializableN
                             )}
                             {initialData.map((item) => (
                                 <TableRow key={item.id}>
-                                    <TableCell className="font-medium">{item.title}</TableCell>
+                                    <TableCell className="font-medium">
+                                        <div className="flex items-center gap-2">
+                                            {item.isFeatured && <span className="text-yellow-500">★</span>}
+                                            {item.title}
+                                        </div>
+                                    </TableCell>
                                     <TableCell>{item.author}</TableCell>
                                     <TableCell>{new Date(item.createdAt).toLocaleDateString('id-ID')}</TableCell>
                                     <TableCell>Published</TableCell>

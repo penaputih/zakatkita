@@ -11,9 +11,10 @@ interface SedekahClientProps {
     bankAccount?: string;
     totalDonations?: number;
     totalDonors?: number;
+    programId?: string;
 }
 
-export default function SedekahClient({ qrisImage, bankAccount, totalDonations = 0, totalDonors = 0 }: SedekahClientProps) {
+export default function SedekahClient({ qrisImage, bankAccount, totalDonations = 0, totalDonors = 0, programId }: SedekahClientProps) {
     const [isPaymentOpen, setIsPaymentOpen] = useState(false);
 
     const handlePaymentSuccess = () => {
@@ -23,7 +24,7 @@ export default function SedekahClient({ qrisImage, bankAccount, totalDonations =
     return (
         <main className="min-h-screen bg-slate-50 dark:bg-slate-950 pb-28">
             {/* Header */}
-            <div className="bg-white/80 dark:bg-slate-950/80 backdrop-blur-md sticky top-0 z-40 border-b border-border/40 px-4 py-4 flex items-center justify-between">
+            <div className="bg-white/80 dark:bg-slate-950/80 backdrop-blur-md fixed w-full max-w-[480px] left-1/2 -translate-x-1/2 top-0 z-40 border-b border-border/40 px-4 py-4 flex items-center justify-between">
                 <div className="flex items-center gap-3">
                     <Link href="/" className="p-2 rounded-full hover:bg-muted transition-colors">
                         <ArrowLeft className="size-5" />
@@ -38,7 +39,7 @@ export default function SedekahClient({ qrisImage, bankAccount, totalDonations =
             </div>
 
             {/* Hero Section with Sunrise Theme */}
-            <div className="relative overflow-hidden bg-gradient-to-b from-indigo-900 via-purple-800 to-orange-500 py-16 px-6 text-center text-white">
+            <div className="relative overflow-hidden bg-gradient-to-b from-indigo-900 via-purple-800 to-orange-500 py-16 px-6 text-center text-white mt-16">
                 <div className="absolute top-0 left-0 w-full h-full opacity-20 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')]"></div>
                 <div className="relative z-10 flex flex-col items-center">
                     <Sunrise className="size-16 mb-4 text-orange-200 animate-pulse-slow" />
@@ -112,7 +113,7 @@ export default function SedekahClient({ qrisImage, bankAccount, totalDonations =
             </div>
 
             {/* Bottom Floating CTA */}
-            <div className="fixed bottom-0 left-0 right-0 p-4 bg-white dark:bg-slate-950 border-t border-border z-50">
+            <div className="fixed bottom-0 w-full max-w-[480px] left-1/2 -translate-x-1/2 p-4 bg-white dark:bg-slate-950 border-t border-border z-50">
                 <Button
                     className="w-full font-bold h-12 text-base rounded-full shadow-lg shadow-orange-500/20 bg-gradient-to-r from-orange-500 to-rose-600 hover:from-orange-600 hover:to-rose-700 text-white border-0"
                     onClick={() => setIsPaymentOpen(true)}
@@ -128,6 +129,7 @@ export default function SedekahClient({ qrisImage, bankAccount, totalDonations =
                 qrisImage={qrisImage}
                 bankAccount={bankAccount}
                 title="Sedekah Subuh"
+                programId={programId}
                 suggestedAmounts={[10000, 20000, 50000, 100000]} // Smaller amounts for daily routine
                 onSuccess={handlePaymentSuccess}
             />

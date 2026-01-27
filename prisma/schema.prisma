@@ -73,6 +73,7 @@ model News {
   content   String   @db.Text
   image     String
   author    String
+  isFeatured Boolean  @default(false)
   createdAt DateTime @default(now())
 }
 
@@ -80,11 +81,15 @@ model User {
   id        String   @id @default(cuid())
   name      String
   email     String   @unique
-  password  String
+  password  String?
   role      Role     @default(MEMBER)
   isVerified Boolean @default(false)
   image     String?
   phone     String?
+  canAccessWaris Boolean @default(false)
+  isContributor Boolean @default(false)
+  verificationCode String?
+  verificationCodeExpires DateTime?
   createdAt DateTime @default(now())
   transactions Transaction[]
 }
